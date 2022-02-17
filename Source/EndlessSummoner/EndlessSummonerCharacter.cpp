@@ -20,12 +20,11 @@ AEndlessSummonerCharacter::AEndlessSummonerCharacter()
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
-
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
-
+    
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f); // ...at this rotation rate
@@ -67,35 +66,8 @@ void AEndlessSummonerCharacter::SetupPlayerInputComponent(class UInputComponent*
 	PlayerInputComponent->BindAxis("TurnRate", this, &AEndlessSummonerCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AEndlessSummonerCharacter::LookUpAtRate);
-
-	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AEndlessSummonerCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AEndlessSummonerCharacter::TouchStopped);
-
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AEndlessSummonerCharacter::OnResetVR);
-}
-
-
-void AEndlessSummonerCharacter::OnResetVR()
-{
-	// If EndlessSummoner is added to a project via 'Add Feature' in the Unreal Editor the dependency on HeadMountedDisplay in EndlessSummoner.Build.cs is not automatically propagated
-	// and a linker error will result.
-	// You will need to either:
-	//		Add "HeadMountedDisplay" to [YourProject].Build.cs PublicDependencyModuleNames in order to build successfully (appropriate if supporting VR).
-	// or:
-	//		Comment or delete the call to ResetOrientationAndPosition below (appropriate if not supporting VR)
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
-}
-
-void AEndlessSummonerCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		Jump();
-}
-
-void AEndlessSummonerCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
-{
-		StopJumping();
+	
+	PlayerInputComponent->BindAction("RightClick", IE_Released, this,  &AEndlessSummonerCharacter::UseGrapplingSkill);
 }
 
 void AEndlessSummonerCharacter::TurnAtRate(float Rate)
@@ -136,5 +108,12 @@ void AEndlessSummonerCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+	}
+}
+void AEndlessSummonerCharacter::UseGrapplingSkill()
+{
+	if(GrapplingSkill != nullptr)
+	{
+		GrapplingSkill->UseSkill();
 	}
 }

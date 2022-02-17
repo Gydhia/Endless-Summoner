@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GrapplingSkill.h"
 #include "GameFramework/Character.h"
 #include "EndlessSummonerCharacter.generated.h"
 
@@ -28,6 +29,8 @@ public:
 	/** Base look up/down rate, in deg/sec. Other scaling may affect final rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
+
+	UGrapplingSkill* GrapplingSkill;
 
 protected:
 
@@ -68,5 +71,6 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	void UseGrapplingSkill();
 };
 
