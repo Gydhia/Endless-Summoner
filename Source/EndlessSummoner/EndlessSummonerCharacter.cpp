@@ -67,7 +67,6 @@ void AEndlessSummonerCharacter::SetupPlayerInputComponent(class UInputComponent*
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("LookUpRate", this, &AEndlessSummonerCharacter::LookUpAtRate);
 	
-	PlayerInputComponent->BindAction("RightClick", IE_Released, this,  &AEndlessSummonerCharacter::UseGrapplingSkill);
 }
 
 void AEndlessSummonerCharacter::TurnAtRate(float Rate)
@@ -108,12 +107,5 @@ void AEndlessSummonerCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
-	}
-}
-void AEndlessSummonerCharacter::UseGrapplingSkill()
-{
-	if(GrapplingSkill != nullptr)
-	{
-		GrapplingSkill->UseSkill();
 	}
 }
